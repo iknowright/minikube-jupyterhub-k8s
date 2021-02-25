@@ -1,0 +1,23 @@
+proxy:
+  secretToken: "7f086ffad8425e4c4b4f5d137911fe4f41dc649f752b89b3ec3e4b059439fd0d"
+  service:
+    type: NodePort
+
+singleuser:
+  image:
+    # Get the latest image tag at:
+    # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+    # Inspect the Dockerfile at:
+    # https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook/Dockerfile
+    name: jupyter/datascience-notebook
+    tag: 177037d09156
+  defaultUrl: "/lab"
+
+hub:
+  config:
+    JupyterHub:
+      authenticator_class: ldapauthenticator.LDAPAuthenticator
+    LDAPAuthenticator:
+      bind_dn_template:
+        - cn={username},ou=edir,ou=people,ou=EXAMPLE-UNIT,o=EXAMPLE
+      server_address: 10.110.204.67

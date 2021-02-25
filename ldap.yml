@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jupyterhub-ldap
+  labels:
+    app: jupyterhub-ldap
+spec:
+  containers:
+  - name: openldap
+    image: osixia/openldap
+    ports:
+      - containerPort: 389
+      - containerPort: 636
+    env:
+      - name: LDAP_TLS_VERIFY_CLIENT
+        value: "never"
+  - name: phpldapadmin
+    image: osixia/phpldapadmin
+    ports:
+      - containerPort: 80
+    env:
+      - name: PHPLDAPADMIN_HTTPS
+        value: "false"
+      - name: PHPLDAPADMIN_LDAP_HOSTS
+        value: localhost
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyterhub-ldap-admin
+  labels:
+    app: jupyterhub-ldap-admin
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: jupyterhub-ldap
