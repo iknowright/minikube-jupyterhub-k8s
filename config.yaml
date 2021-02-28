@@ -1,8 +1,3 @@
-proxy:
-  secretToken: "7f086ffad8425e4c4b4f5d137911fe4f41dc649f752b89b3ec3e4b059439fd0d"
-  service:
-    type: NodePort
-
 singleuser:
   image:
     # Get the latest image tag at:
@@ -15,9 +10,16 @@ singleuser:
 
 hub:
   config:
+    Authenticator:
+      admin_users:
+        - netdb-admin
+      allowed_users:
+        - netdb
     JupyterHub:
       authenticator_class: ldapauthenticator.LDAPAuthenticator
     LDAPAuthenticator:
+      use_ssl: false
+      server_address: 172.17.0.7
       bind_dn_template:
-        - cn={username},ou=edir,ou=people,ou=EXAMPLE-UNIT,o=EXAMPLE
-      server_address: 10.110.204.67
+        - cn={username},cn=dev,ou=research,ou=internal,dc=example,dc=org
+        - cn={username},cn=admin,ou=research,ou=internal,dc=example,dc=org
